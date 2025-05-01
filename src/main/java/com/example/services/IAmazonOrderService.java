@@ -13,4 +13,5 @@ import java.util.Map;
 public interface IAmazonOrderService {
     public Map<Summary.OrderStatus, Long> loadEventSummary();
     public List<OrderChangeNotification> loadOrderChangeNotifications();
+    public List<OrderChangeNotification> loadOrderChangeEvents();
 }

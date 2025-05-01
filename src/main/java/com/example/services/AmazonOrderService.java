@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 public class AmazonOrderService implements IAmazonOrderService{
 
     private final AmazonOrderStatusTmpRepository amazonOrderStatusTmpRepository;
+    private final AmazonOrderStatusRepository amazonOrderStatusRepository;
     private final ObjectMapper objectMapper;
     @Override
     public Map<Summary.OrderStatus, Long> loadEventSummary() {
@@ -75,4 +76,20 @@ public class AmazonOrderService implements IAmazonOrderService{
         return changeNotifications;
     }
 
+    @Override
+    public List<OrderChangeNotification> loadOrderChangeEvents() {
+        List<AmazonOrderStatusEvent> events = amazonOrderStatusRepository.findAll();
+        List<OrderChangeNotification>  changeNotifications = events
+                .stream().map(event -> {
+                    String content = event.getContent();
+                    try {
+                        OrderChangeNotification ocn = objectMapper
+                                .readValue(content, OrderChangeNotification.class);
+                        return ocn;
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).collect(Collectors.toList());
+        return changeNotifications;
+    }
 }

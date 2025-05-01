@@ -34,4 +34,10 @@ public class AmazonOrderController {
                 .loadEventSummary();
         return ResponseEntity.ok().body(orderSummary);
     }
+
+    @GetMapping("/change-events")
+    public ResponseEntity<List<OrderChangeNotification>> loadOrderChangeEvents() {
+        List<OrderChangeNotification> notifications = amazonOrderService.loadOrderChangeEvents();
+        return ResponseEntity.ok().body(notifications);
+    }
 }
